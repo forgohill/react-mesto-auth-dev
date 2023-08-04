@@ -1,16 +1,26 @@
+// const configApi = {
+//   url: 'https://nomoreparties.co/v1/cohort-64/',
+//   headers: {
+//     'content-type': 'application/json',
+//     authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
+//     credentials: 'include',
+//   }
+// };
+
 const configApi = {
-  url: 'https://nomoreparties.co/v1/cohort-64/',
+  url: 'http://localhost:3001/',
   headers: {
     'content-type': 'application/json',
-    authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
-    credentials: 'include',
-  }
+    // authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
+  },
+  credentials: 'include',
 };
 
 class Api {
   constructor(config) {
     this._url = config.url;
     this._headers = config.headers;
+    this._credentials = config.credentials;
   }
 
   _checkError(res) {
@@ -36,7 +46,8 @@ class Api {
   getUserInfo() {
     return fetch(`${this._url}users/me`, {
       method: "GET",
-      headers: this._headers
+      headers: this._headers,
+      credentials: this._credentials,
     })
       .then((res) => {
         return this._checkError(res);
@@ -49,6 +60,7 @@ class Api {
     return fetch(`${this._url}users/me`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify(data)
     })
       .then((res) => {
@@ -59,7 +71,8 @@ class Api {
   getCards() {
     return fetch(`${this._url}cards`, {
       method: "GET",
-      headers: this._headers
+      headers: this._headers,
+      credentials: this._credentials,
     })
       .then((res) => {
         return this._checkError(res);
@@ -70,6 +83,7 @@ class Api {
     return fetch(`${this._url}cards`, {
       method: 'POST',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify(data)
     })
       .then((res) => {

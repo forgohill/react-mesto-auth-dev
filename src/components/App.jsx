@@ -213,6 +213,7 @@ function App() {
   //  Проверка токена
   const cookieCheck = () => {
     const token = localStorage.getItem('loginInMestoTrue');
+
     if (token) {
       console.log(token);
       setIsLoggedIn(true);
@@ -380,7 +381,10 @@ function App() {
       // API инициализируем карточки
       api.getCards()
         .then((data) => {
-          setCards(data);
+          console.log('Я В СТЕЙТЕ СЛУШАТЕЛЬ ЧЕК ЛОГИН')
+          console.log(data.cards);
+          // setCards(data);
+          setCards(data.cards.reverse());
         })
         .catch((err) => {
           console.error(err);

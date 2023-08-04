@@ -26,6 +26,20 @@ function Main({
     )
   });
 
+  // const cardList = () => {
+  //   console.log('сработал кардлист');
+  // };
+
+  React.useEffect(() => {
+
+    console.log(cards);
+
+    // return cards.map((item) => {
+    //   console.log(item);
+    // });
+
+  }, []);
+
   // глобальный контекст
   const currentUser = React.useContext(CurrentUserContext);
 
