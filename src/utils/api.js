@@ -8,7 +8,8 @@
 // };
 
 const configApi = {
-  url: 'http://localhost:3001/',
+  url: 'http://localhost:3000/',
+  // url: 'http://84.201.131.48:3001/',
   headers: {
     'content-type': 'application/json',
     // authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
@@ -141,6 +142,7 @@ class Api {
     return fetch(`${this._url}users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify(data)
     })
       .then((res) => {
