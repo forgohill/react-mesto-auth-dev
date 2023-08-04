@@ -24,7 +24,7 @@ function Main({
         onConfirmDeleteCard={onConfirmDeleteCard}
       />)
     )
-  });
+  })
 
   // const cardList = () => {
   //   console.log('сработал кардлист');

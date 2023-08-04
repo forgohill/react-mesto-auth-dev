@@ -23,8 +23,13 @@ function Card({
     onCardDelete(item);
   }
 
-  const isOwn = item.owner._id === currentUser._id;
-  const isLiked = item.likes.some(i => i._id === currentUser._id);
+  // const isOwn = item.owner._id === currentUser._id;
+  const isOwn = item.owner === currentUser._id;
+  // console.log(item.owner);
+  // console.log(item.owner._id);
+  // console.log(currentUser._id);
+  // const isLiked = item.likes.some(i => i._id === currentUser._id);
+  const isLiked = item.likes.some(i => i === currentUser._id);
 
   const cardLikeButtonClassName = (
     `cards__btn-like ${isLiked && 'cards__btn-like_active'}`
@@ -52,7 +57,7 @@ function Card({
           <p className="cards__counter-like">{item.likes.length}</p>
         </div>
       </div>
-      {isOwn && <button className="cards__trash links" onClick={handleDeleteClick}></button>};
+      {isOwn && <button className="cards__trash links" onClick={handleDeleteClick}></button>}
     </article>
 
   );

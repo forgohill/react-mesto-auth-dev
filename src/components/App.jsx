@@ -109,7 +109,8 @@ function App() {
   const handleCardLike = (card) => {
     const isLiked = card.likes
       .some((item) => {
-        return item._id === currentUser._id;
+        // return item._id === currentUser._id;
+        return item === currentUser._id;
       });
 
     // API проверка на true/false и отправка лайка либо снятие

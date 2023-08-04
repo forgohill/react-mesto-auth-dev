@@ -96,6 +96,7 @@ class Api {
       return fetch(`${this._url}cards/${likeId}/likes`, {
         method: 'PUT',
         headers: this._headers,
+        credentials: this._credentials,
       })
         .then((res) => {
           return this._checkError(res);
@@ -104,6 +105,7 @@ class Api {
       return fetch(`${this._url}cards/${likeId}/likes`, {
         method: 'DELETE',
         headers: this._headers,
+        credentials: this._credentials,
       })
         .then((res) => {
           return this._checkError(res);
@@ -116,6 +118,7 @@ class Api {
     return fetch(`${this._url}cards/${likeId}/likes`, {
       method: 'PUT',
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then((res) => {
         return this._checkError(res);
@@ -126,6 +129,7 @@ class Api {
     return fetch(`${this._url}cards/${likeId}/likes`, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then((res) => {
         return this._checkError(res);
@@ -148,6 +152,7 @@ class Api {
     return fetch(`${this._url}cards/${cardId}`, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then((res) => {
         return this._checkError(res);
