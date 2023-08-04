@@ -18,7 +18,9 @@ const Register = ({ onRegister, onDisabled }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formValue;
-    onRegister(password, email);
+    console.log(formValue);
+    // onRegister(password, email);
+    onRegister(formValue);
 
   }
 

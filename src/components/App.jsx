@@ -17,7 +17,7 @@ import InfoTooltip from './InfoTooltip/InfoTooltip';
 import ProtectedRoute from './ProtectedRoute/ProtectedRoute';
 
 import api from '../utils/api';
-import { register, authorize, checkToken } from '../utils/auth.js';
+import { register, authorize, checkToken, logout } from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -211,24 +211,30 @@ function App() {
   const navigate = useNavigate();
 
   //  Проверка токена
-  const tockenCheck = () => {
-    const token = localStorage.getItem('token');
+  const cookieCheck = () => {
+    const token = localStorage.getItem('loginInMestoTrue');
     if (token) {
-      checkToken(token)
-        .then((res) => {
-          const { email } = res.data;
-          setUserEmail(email);
-          setIsLoggedIn(true);
-          navigate('/', { replace: true });
-        })
-        .catch((err) => {
-          console.error(`Что-то пошло не так! Попробуйте ещё раз. ОШИБКА : ${err}`)
-          setIsOpenedPopupInfoTooltip(true);
-          setSourceInfoTooltips({
-            access: false,
-            message: 'Время использования ключа истекло, повторите вход.',
-          })
-        })
+      console.log(token);
+      setIsLoggedIn(true);
+      navigate('/', { replace: true });
+
+      // "ЭТО НАДО ДОПИЛИТЬ"
+
+      // checkToken(token)
+      //   .then((res) => {
+      //     const { email } = res.data;
+      //     setUserEmail(email);
+      //     setIsLoggedIn(true);
+      //     navigate('/', { replace: true });
+      //   })
+      //   .catch((err) => {
+      //     console.error(`Что-то пошло не так! Попробуйте ещё раз. ОШИБКА : ${err}`)
+      //     setIsOpenedPopupInfoTooltip(true);
+      //     setSourceInfoTooltips({
+      //       access: false,
+      //       message: 'Время использования ключа истекло, повторите вход.',
+      //     })
+      //   })
     }
   }
 
@@ -241,7 +247,10 @@ function App() {
       .then((res) => {
         if (password && email !== '') {
           const { token } = res;
-          localStorage.setItem('token', token);
+          // localStorage.setItem('token', token);
+          localStorage.setItem('loginInMestoTrue', true);
+
+          console.log(localStorage.getItem('loginInMestoTrue'));
           setUserEmail(email);
           setIsLoggedIn(true);
           navigate('/', { replace: true });
@@ -270,12 +279,22 @@ function App() {
   }
 
   // выполнение регистрации / register
-  const handleRegister = (password, email) => {
+  // const handleRegister = (password, email) => {
+  const handleRegister = ({ password, email }) => {
+    const data = { password, email };
+
+    console.log(data);
+    console.log('data - в апп регистер()');
 
     setIsDisabled(true);
+    // register({ password, email })
 
-    register(password, email)
+    register(data)
       .then((res) => {
+
+        console.log(data);
+        console.log(' я тут 123')
+
         setSourceInfoTooltips({
           access: true,
           message: 'Вы успешно зарегистрировались!',
@@ -315,9 +334,29 @@ function App() {
     navigate('/sign-in', { replace: true });
   }
 
+  // удаление кукиса JWT
+  const removeCookie = () => {
+    console.log('УДAЛИЛИ КУКПИС');
+    logout()
+      .then((res) => {
+
+        console.log('Я В АПИ УДАЛИЛ КуКУ');
+        console.log(res);
+
+        localStorage.removeItem('loginInMestoTrue');
+        setIsLoggedIn(false);
+        setUserEmail('');
+        navigate('/sign-in', { replace: true });
+        document.cookie = "jwtChek=; expires=Mon, 26 Dec 1991 00:00:01 GMT;";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   // API чекаем токен
   React.useEffect(() => {
-    tockenCheck();
+    cookieCheck();
   }, []);
 
 
@@ -354,6 +393,7 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
 
         <Header userEmail={userEmail} onSignOut={removeToken} />
+        <Header userEmail={userEmail} onSignOut={removeCookie} />
         <Routes>
           <Route path='/' element={
             <>
