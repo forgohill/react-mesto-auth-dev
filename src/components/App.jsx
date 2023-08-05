@@ -48,7 +48,6 @@ function App() {
     message: '',
   });
 
-
   // блок обработчиков кнопок
   const handleEditAvatarClick = () => {
     setIsDisabled(false);
@@ -109,7 +108,6 @@ function App() {
   const handleCardLike = (card) => {
     const isLiked = card.likes
       .some((item) => {
-        // return item._id === currentUser._id;
         return item === currentUser._id;
       });
 
@@ -211,48 +209,24 @@ function App() {
 
   const navigate = useNavigate();
 
-  //  Проверка токена
+  //  Проверка токена/кукиса
   const cookieCheck = () => {
     const token = localStorage.getItem('loginInMestoTrue');
 
     if (token) {
-      console.log(token);
       setIsLoggedIn(true);
       navigate('/', { replace: true });
-
-      // "ЭТО НАДО ДОПИЛИТЬ"
-
-      // checkToken(token)
-      //   .then((res) => {
-      //     const { email } = res.data;
-      //     setUserEmail(email);
-      //     setIsLoggedIn(true);
-      //     navigate('/', { replace: true });
-      //   })
-      //   .catch((err) => {
-      //     console.error(`Что-то пошло не так! Попробуйте ещё раз. ОШИБКА : ${err}`)
-      //     setIsOpenedPopupInfoTooltip(true);
-      //     setSourceInfoTooltips({
-      //       access: false,
-      //       message: 'Время использования ключа истекло, повторите вход.',
-      //     })
-      //   })
     }
   }
 
   // выполнение аторизации
   const handleLogin = (password, email) => {
-
     setIsDisabled(true);
-
     authorize(password, email)
       .then((res) => {
         if (password && email !== '') {
           const { token } = res;
-          // localStorage.setItem('token', token);
           localStorage.setItem('loginInMestoTrue', true);
-
-          console.log(localStorage.getItem('loginInMestoTrue'));
           setUserEmail(email);
           setIsLoggedIn(true);
           navigate('/', { replace: true });
@@ -281,22 +255,11 @@ function App() {
   }
 
   // выполнение регистрации / register
-  // const handleRegister = (password, email) => {
   const handleRegister = ({ password, email }) => {
     const data = { password, email };
-
-    console.log(data);
-    console.log('data - в апп регистер()');
-
     setIsDisabled(true);
-    // register({ password, email })
-
     register(data)
       .then((res) => {
-
-        console.log(data);
-        console.log(' я тут 123')
-
         setSourceInfoTooltips({
           access: true,
           message: 'Вы успешно зарегистрировались!',
@@ -305,7 +268,7 @@ function App() {
         navigate('/sign-in', { replace: true });
       })
       .catch((err) => {
-        if (err === 400) {
+        if (err === 409) {
           console.error(`Это e-mail уже зарегестрирован, войдите используя пароль. ОШИБКА : ${err}`);
           setSourceInfoTooltips({
             access: false,
@@ -328,47 +291,34 @@ function App() {
       });
   }
 
-  // удаление токена
-  const removeToken = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setUserEmail('');
-    navigate('/sign-in', { replace: true });
-  }
-
   // удаление кукиса JWT
   const removeCookie = () => {
-    console.log('УДAЛИЛИ КУКПИС');
     logout()
       .then((res) => {
-
-        console.log('Я В АПИ УДАЛИЛ КуКУ');
-        console.log(res);
-
-        localStorage.removeItem('loginInMestoTrue');
-        setIsLoggedIn(false);
-        setUserEmail('');
-        navigate('/sign-in', { replace: true });
-        document.cookie = "jwtChek=; expires=Mon, 26 Dec 1991 00:00:01 GMT;";
+        if (res.exit) {
+          console.log('user logged out');
+          localStorage.removeItem('loginInMestoTrue');
+          setIsLoggedIn(false);
+          setUserEmail('');
+          navigate('/sign-in', { replace: true });
+          document.cookie = "jwtChek=; expires=Mon, 26 Dec 1991 00:00:01 GMT;";
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // API чекаем токен
+  // API чекаем Кукисы
   React.useEffect(() => {
     cookieCheck();
   }, []);
 
-
   // первая инициализация данных с сервера
   React.useEffect(() => {
-
     // АПИ cработает только когда isLoggedIn true
-    // isLoggedIn становится true при проверке токена,
+    // isLoggedIn становится true при проверке токена или куки,
     //  либо при правильном вводе имя и пароль
-
     if (isLoggedIn === true) {
       // API получения и запись стейта текущийЮзер
       api.getUserInfo()
@@ -376,15 +326,26 @@ function App() {
           setCurrentUser(data);
         })
         .catch((err) => {
-          console.error(err);
+          removeCookie();
+          if (err === 401) {
+            console.error('Срок авторизации истёк ОШИБКА : 401')
+            setIsOpenedPopupInfoTooltip(true);
+            setSourceInfoTooltips({
+              access: false,
+              message: 'Время авторизации истекло. Войдте заново.',
+            })
+          } else if (err !== 401) {
+            console.error(`Что-то пошло не так! Попробуйте ещё раз. ОШИБКА : ${err}`)
+            setIsOpenedPopupInfoTooltip(true);
+            setSourceInfoTooltips({
+              access: false,
+              message: 'Что-то пошло не так! Попробуйте ещё раз.',
+            })
+          }
         });
-
       // API инициализируем карточки
       api.getCards()
         .then((data) => {
-          console.log('Я В СТЕЙТЕ СЛУШАТЕЛЬ ЧЕК ЛОГИН')
-          console.log(data.cards);
-          // setCards(data);
           setCards(data.cards.reverse());
         })
         .catch((err) => {
@@ -396,8 +357,6 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-
-        <Header userEmail={userEmail} onSignOut={removeToken} />
         <Header userEmail={userEmail} onSignOut={removeCookie} />
         <Routes>
           <Route path='/' element={

@@ -7,6 +7,8 @@ function Card({
   onCardLike,
   onCardDelete
 }) {
+
+  // вытаскиевает информацию из глобалдьного контекста
   const currentUser = React.useContext(CurrentUserContext);
 
   // обрабатоваем клик на кратинку
@@ -23,22 +25,17 @@ function Card({
     onCardDelete(item);
   }
 
-  // const isOwn = item.owner._id === currentUser._id;
+  // сравниваем хозяина единица с ID текущего юзера в глобальном контексте
   const isOwn = item.owner === currentUser._id;
-  // console.log(item.owner);
-  // console.log(item.owner._id);
-  // console.log(currentUser._id);
-  // const isLiked = item.likes.some(i => i._id === currentUser._id);
+  // выискиваем есть ли внутри массива лайков ID текущего юзера из глобального контекста
   const isLiked = item.likes.some(i => i === currentUser._id);
-
+  // если isLiked === true то применяем стиль окрашивания лайка
   const cardLikeButtonClassName = (
     `cards__btn-like ${isLiked && 'cards__btn-like_active'}`
   );
 
   return (
-
-    <article className="grid-places__cards cards"
-    >
+    <article className="grid-places__cards cards">
       <img
         alt={item.name}
         className="cards__image"
@@ -48,7 +45,6 @@ function Card({
       <div className="cards__wrapper">
         <h2 className="cards__title">{item.name}</h2>
         <div className="cards__container-like">
-
           <button
             type="button"
             aria-label="Понравилось"
@@ -59,7 +55,6 @@ function Card({
       </div>
       {isOwn && <button className="cards__trash links" onClick={handleDeleteClick}></button>}
     </article>
-
   );
 }
 

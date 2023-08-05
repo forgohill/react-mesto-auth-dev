@@ -16,17 +16,11 @@ const checkError = (res) => {
     return res.json();
   }
   else {
-    console.log(' я в обработчике ошибок')
-    console.log(res);
     return Promise.reject(res.status);
   }
 }
 
 export const register = ({ password, email }) => {
-  console.log(password);
-  console.log(email);
-  console.log("я тут register")
-  // debugger;
   return fetch(`${BASE_URL}${ENDPOINT_REGISTER}`,
     {
       method: 'POST',
@@ -35,14 +29,7 @@ export const register = ({ password, email }) => {
       body: JSON.stringify({ password, email })
     }
   )
-    // .then((res) => {
-    //   console.log(res);
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // })
     .then((response) => {
-      console.log(' я внутри ветча');
       return checkError(response);
     })
 };
@@ -76,7 +63,6 @@ export const checkToken = (token) => {
       return checkError(response);
     })
 };
-
 
 export const logout = () => {
   return fetch(

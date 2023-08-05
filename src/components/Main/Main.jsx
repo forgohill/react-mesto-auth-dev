@@ -26,27 +26,11 @@ function Main({
     )
   })
 
-  // const cardList = () => {
-  //   console.log('сработал кардлист');
-  // };
-
-  React.useEffect(() => {
-
-    console.log(cards);
-
-    // return cards.map((item) => {
-    //   console.log(item);
-    // });
-
-  }, []);
-
   // глобальный контекст
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
-
     <main className="main">
-
       <section className="profile">
         <div className="profile__container">
           <div className="profile__wrapper-avatar">
@@ -80,11 +64,9 @@ function Main({
           onClick={onAddCard}
         ></button>
       </section>
-
       <section className="grid-places">
         {cardList}
       </section>
-
     </main >
   );
 }

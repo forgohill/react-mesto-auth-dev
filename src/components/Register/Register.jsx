@@ -18,10 +18,7 @@ const Register = ({ onRegister, onDisabled }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formValue;
-    console.log(formValue);
-    // onRegister(password, email);
     onRegister(formValue);
-
   }
 
   return (
@@ -53,7 +50,6 @@ const Register = ({ onRegister, onDisabled }) => {
           className='entry-page__submit'
           aria-label="Зарегистрироваться на сайте"
         >
-
           Зарегистрироваться
         </button>
       </form>

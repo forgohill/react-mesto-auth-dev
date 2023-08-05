@@ -1,18 +1,8 @@
-// const configApi = {
-//   url: 'https://nomoreparties.co/v1/cohort-64/',
-//   headers: {
-//     'content-type': 'application/json',
-//     authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
-//     credentials: 'include',
-//   }
-// };
-
 const configApi = {
-  url: 'http://localhost:3000/',
-  // url: 'http://84.201.131.48:3001/',
+  // url: 'http://localhost:3000/',
+  url: 'http://api.marlo.students.nomoreparties.co/',
   headers: {
     'content-type': 'application/json',
-    // authorization: 'fedbf8d8-f685-4219-bcb3-9f8a312759fb',
   },
   credentials: 'include',
 };
@@ -27,7 +17,7 @@ class Api {
   _checkError(res) {
     if (res.ok) { return res.json(); }
     else {
-      return Promise.reject(`ПРОИЗОШЛА ОШИБКА: ${res.status} `)
+      return Promise.reject(res.status);
     }
   }
 
@@ -56,7 +46,6 @@ class Api {
   }
 
   patchUserInfo({ name, about }) {
-
     const data = { name, about };
     return fetch(`${this._url}users/me`, {
       method: 'PATCH',
@@ -112,29 +101,6 @@ class Api {
           return this._checkError(res);
         })
     }
-
-  }
-
-  putLikeCard(likeId) {
-    return fetch(`${this._url}cards/${likeId}/likes`, {
-      method: 'PUT',
-      headers: this._headers,
-      credentials: this._credentials,
-    })
-      .then((res) => {
-        return this._checkError(res);
-      })
-  }
-
-  deleteLikeCard(likeId) {
-    return fetch(`${this._url}cards/${likeId}/likes`, {
-      method: 'DELETE',
-      headers: this._headers,
-      credentials: this._credentials,
-    })
-      .then((res) => {
-        return this._checkError(res);
-      })
   }
 
   patchAvatar(avatarLink) {

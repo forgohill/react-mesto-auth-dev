@@ -5,6 +5,7 @@ import { headerLogo } from '../../utils/images.js'
 
 function Header({ userEmail, onSignOut }) {
 
+  // слушаем нажатие на кнопку выйти
   const handleButtonExit = () => {
     onSignOut();
   }
